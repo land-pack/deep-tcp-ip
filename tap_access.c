@@ -1,5 +1,9 @@
 #include <string.h>
 #include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <time.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
@@ -21,7 +25,7 @@ tap_open(char *dev)
     if (*dev) strncpy(ifr.ifr_name, dev, IFNAMSIZ);
     if (ioctl(fd, TUNSETIFF, (void *) &ifr) < 0) { goto failed;}
 
-    strcpy(dev, ifr.ifr_name) return fd;
+    strcpy(dev, ifr.ifr_name); return fd;
 
     failed:
         close(fd); return -1;
@@ -41,7 +45,7 @@ main(int argc, char * argv[])
 
     strcpy(name, "tapint");
     tapfd = tap_open(name);
-    if (tapfd<0) { prinf("port open error!\n"); return 0; }
+    if (tapfd<0) { printf("port open error!\n"); return 0; }
 
     signal(SIGHUP, signal_handler);
     signal(SIGTERM, signal_handler);
